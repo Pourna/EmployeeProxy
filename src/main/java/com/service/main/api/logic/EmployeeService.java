@@ -3,9 +3,8 @@ package com.service.main.api.logic;
 import com.service.main.api.dto.Employee;
 import com.service.main.api.dto.Leave;
 import com.service.main.api.dto.Salary;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.Month;
 import java.util.*;
@@ -57,6 +56,7 @@ public class EmployeeService {
         return getMaxList(employeeList, empSalaries);
     }
 
+    @ExceptionHandler (value = IllegalArgumentException.class)
     public List<Employee> getEmployeeWithMaxSalaryBy(List<Employee> employeeList, Integer year, String month) {
         HashMap<String, Double> empSalaries =  new HashMap<>();
         try {
@@ -67,8 +67,6 @@ public class EmployeeService {
                             .mapToDouble(Salary::getTotal).sum()));
         }
         catch (Exception e) {
-//           throw new IllegalArgumentException();
-             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return  getMaxList(employeeList, empSalaries);
     }
