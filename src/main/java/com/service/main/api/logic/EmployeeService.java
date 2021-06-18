@@ -19,8 +19,8 @@ public class EmployeeService {
         employeeList.forEach(f->empLeaves.put(f.getId(), f.getLeaves().stream().mapToDouble(Leave::getNoOfDays).sum()));
         Double min = Collections.min(empLeaves.values());
         for(Map.Entry<String, Double> e : empLeaves.entrySet()){
-            if(e.getValue()!=min){
-                employeeList.remove(employeeList.stream().filter(f-> f.getId()==e.getKey()).findFirst().get());
+            if(!e.getValue().equals(min)){
+                employeeList.remove(employeeList.stream().filter(f-> f.getId().equals(e.getKey())).findFirst().get());
             }
         }
         return employeeList;
@@ -33,8 +33,9 @@ public class EmployeeService {
     }
 
     public Map<String, Long> getEmployeeByDistrict(List<Employee> employeeList) {
-         Map<String, Long> emap = employeeList.stream().filter(e->e.getCurrentAddress()!=null).collect(Collectors.groupingBy(e->e.getCurrentAddress().getDistrict(), Collectors.counting()));
-         return emap;
+         Map<String, Long> employeeMap = employeeList.stream().filter(e->e.getCurrentAddress()!=null)
+                 .collect(Collectors.groupingBy(e->e.getCurrentAddress().getDistrict(), Collectors.counting()));
+         return employeeMap;
     }
 
     public List<String> getEmployeeIdBy(List<Employee> employeeList, Integer start, Integer end) {
@@ -77,8 +78,8 @@ public class EmployeeService {
             return null;
         else {
             for (Map.Entry<String, Double> e : employeeMap.entrySet()) {
-                if (e.getValue() != maxValue) {
-                    employeeList.remove(employeeList.stream().filter(f -> f.getId() == e.getKey()).findFirst().get());
+                if (!e.getValue().equals(maxValue)) {
+                    employeeList.remove(employeeList.stream().filter(f -> f.getId().equals(e.getKey())).findFirst().get());
                 }
             }
         }

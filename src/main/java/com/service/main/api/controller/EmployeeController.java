@@ -1,12 +1,13 @@
 package com.service.main.api.controller;
 
-import com.service.main.api.client.EmployeeClient;
 import com.service.main.api.dto.Employee;
 import com.service.main.api.logic.EmployeeService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -15,26 +16,28 @@ import java.util.*;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeClient employeeClient;
-
-    @Autowired
     private EmployeeService employeeService;
 
+    RestTemplate restTemplate = new RestTemplate();
+    String employeeDBURL = "http://localhost:8080/employee";
+
     @PostMapping("/addEmployee")
-    public void postEmployee(@RequestBody Employee employee) {
-        employeeClient.addEmployee(employee);
+    public ResponseEntity<Object> postEmployee(@RequestBody Employee employee) {
+        return restTemplate.postForEntity(employeeDBURL, employee, Object.class);
     }
 
     @GetMapping("/getAllEmployee")
-    public List<Employee> getAllEmployee() {
-        return employeeClient.getAllEmployee();
+    public ResponseEntity<Employee[]> getAllEmployee() {
+        return restTemplate.getForEntity(employeeDBURL, Employee[].class);
     }
 
     @GetMapping("/getEmployeeWithMaxSalary")
     public List<Employee> getEmployeeWithMaxSalary(
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) String month) {
-        List<Employee> employeeList = employeeClient.getAllEmployee();
+        Employee[] employees = restTemplate.getForEntity(employeeDBURL, Employee[].class).getBody();
+        List<Employee> employeeList = new ArrayList<>
+                (Arrays.asList(Optional.ofNullable(employees).orElse(new Employee[0])));
         List<Employee> result;
         if(year!=null && StringUtils.isNotEmpty(month))
             result = employeeService.getEmployeeWithMaxSalaryBy(employeeList, year, month);
@@ -45,27 +48,33 @@ public class EmployeeController {
         return result;
     }
 
-    @GetMapping("/getEmployeeCountByPincode/{pinCode}")
+    @GetMapping("/getEmployeeCountByPinCode/{pinCode}")
     public String getEmployeeCountByPinCode(@PathVariable Integer pinCode) {
-        List<Employee> employeeList = employeeClient.getAllEmployee();
+        Employee[] employees = restTemplate.getForEntity(employeeDBURL, Employee[].class).getBody();
+        List<Employee> employeeList = new ArrayList<>
+                (Arrays.asList(Optional.ofNullable(employees).orElse(new Employee[0])));
         Long count = employeeService.getEmployeeByPinCode(employeeList, pinCode);
-        return "Total number of employees residing at pincode "+pinCode+": "+count;
+        return "Total number of employees residing at pinCode "+pinCode+": "+count;
     }
 
     @GetMapping("/getEmployeeCountByDistrict")
     public Map<String, Long> getEmployeeCountByDistrict() {
-        List<Employee> employeeList = employeeClient.getAllEmployee();
+        Employee[] employees = restTemplate.getForEntity(employeeDBURL, Employee[].class).getBody();
+        List<Employee> employeeList = new ArrayList<>
+                (Arrays.asList(Optional.ofNullable(employees).orElse(new Employee[0])));
         return employeeService.getEmployeeByDistrict(employeeList);
     }
 
     @GetMapping("/getEmployeeByAgeRange")
     public List<String> getEmployeeByAgeRange(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
-        List<Employee> employeeList = employeeClient.getAllEmployee();
+        Employee[] employees = restTemplate.getForEntity(employeeDBURL, Employee[].class).getBody();
+        List<Employee> employeeList = new ArrayList<>
+                (Arrays.asList(Optional.ofNullable(employees).orElse(new Employee[0])));
         if (start != null && end != null)
             return employeeService.getEmployeeIdBy(employeeList, start, end);
         else if (start == null && end != null)
             return employeeService.getEmployeeIdBy(employeeList, 1, end);
-        else if (start != null && end == null)
+        else if (start != null)
             return employeeService.getEmployeeIdBy(employeeList, start, 100);
         else
             return employeeService.getEmployeeIdBy(employeeList,1,100);
@@ -74,7 +83,9 @@ public class EmployeeController {
 
     @GetMapping("/getEmployeeWithLeastLeaves")
     public List<Employee> getEmployeeWithLeastLeaves() {
-        List<Employee> employeeList = employeeClient.getAllEmployee();
+        Employee[] employees = restTemplate.getForEntity(employeeDBURL, Employee[].class).getBody();
+        List<Employee> employeeList = new ArrayList<>
+                (Arrays.asList(Optional.ofNullable(employees).orElse(new Employee[0])));
         employeeService.getEmployeeWithLeastLeave(employeeList);
         return employeeList;
     }

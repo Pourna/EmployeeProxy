@@ -24,9 +24,9 @@ public class Leave {
     @JsonProperty("noOfDays")
     private Double noOfDays;
     @JsonProperty("fromDate")
-    private Long fromDate;
+    private String fromDate;
     @JsonProperty("toDate")
-    private Long toDate;
+    private String toDate;
     @JsonProperty("status")
     private String status;
     @JsonIgnore
@@ -43,22 +43,22 @@ public class Leave {
     }
 
     @JsonProperty("fromDate")
-    public Long getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
     @JsonProperty("fromDate")
-    public void setFromDate(Long fromDate) {
+    public void setFromDate(String fromDate) {
         this.fromDate = fromDate;
     }
 
     @JsonProperty("toDate")
-    public Long getToDate() {
+    public String getToDate() {
         return toDate;
     }
 
     @JsonProperty("toDate")
-    public void setToDate(Long toDate) {
+    public void setToDate(String toDate) {
         this.toDate = toDate;
     }
 
