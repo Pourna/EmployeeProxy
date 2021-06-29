@@ -2,9 +2,8 @@ package com.service.main.api.controller;
 
 import com.service.main.api.dto.Employee;
 import com.service.main.api.logic.EmployeeService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -12,14 +11,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @RestController
-@EnableFeignClients
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
     RestTemplate restTemplate = new RestTemplate();
-    String employeeDBURL = "http://localhost:8080/employee";
+    String employeeDBURL = "http://172.17.0.2:8080/employee";
 
     @PostMapping("/addEmployee")
     public ResponseEntity<Object> postEmployee(@RequestBody Employee employee) {

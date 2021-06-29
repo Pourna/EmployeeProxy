@@ -1,1 +1,7 @@
-/home/qburst/IdeaProjects/EmployeeProxy/src/main/java/com/service/main/EmployeeProxy.java
+/home/qburst/personal/EmployeeProxy/src/main/java/com/service/main/api/dto/Address.java
+/home/qburst/personal/EmployeeProxy/src/main/java/com/service/main/api/dto/Leave.java
+/home/qburst/personal/EmployeeProxy/src/main/java/com/service/main/api/logic/EmployeeService.java
+/home/qburst/personal/EmployeeProxy/src/main/java/com/service/main/api/dto/Salary.java
+/home/qburst/personal/EmployeeProxy/src/main/java/com/service/main/EmployeeProxy.java
+/home/qburst/personal/EmployeeProxy/src/main/java/com/service/main/api/dto/Employee.java
+/home/qburst/personal/EmployeeProxy/src/main/java/com/service/main/api/controller/EmployeeController.java
